@@ -1,0 +1,17 @@
+.add-monitor-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.add-monitor-form .field {
+  flex: 1;
+  min-width: 200px;
+}
+
+.add-monitor-form__actions {
+  display: flex;
+  gap: var(--space-2);
+}

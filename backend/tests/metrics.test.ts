@@ -98,6 +98,7 @@ describe('GET /apis/:id/metrics', () => {
       currentHealth: 'unknown',
       latestHttpStatus: null,
       latestLatencyMs: null,
+      lastCheckedAt: null,
       averageLatencyMs: null,
       uptimePercentage: null,
       totalChecks: 0,
@@ -141,7 +142,7 @@ describe('GET /apis/:id/metrics', () => {
       .set('Authorization', `Bearer ${alice.token}`)
 
     expect(res.status).toBe(200)
-    expect(res.body).toEqual({
+    expect(res.body).toMatchObject({
       currentHealth: 'down',
       latestHttpStatus: 500,
       latestLatencyMs: 300,
@@ -150,5 +151,6 @@ describe('GET /apis/:id/metrics', () => {
       totalChecks: 3,
       failedChecks: 1,
     })
+    expect(new Date(res.body.lastCheckedAt).getTime()).toBe(now - 1000)
   })
 })

@@ -5,6 +5,7 @@ import authRoutes from './routes/auth'
 import apiMonitorRoutes from './routes/apiMonitors'
 import incidentRoutes from './routes/incidents'
 import { AppError } from './utils/errors'
+import { apiRateLimiter } from './middleware/rateLimit'
 
 const app = express()
 
@@ -12,6 +13,7 @@ const app = express()
 // (a specific deployed frontend origin) is Ticket 20's job.
 app.use(cors({ origin: /^http:\/\/localhost:\d+$/ }))
 app.use(express.json())
+app.use(apiRateLimiter)
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' })

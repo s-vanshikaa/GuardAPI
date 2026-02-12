@@ -17,7 +17,10 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "benchmark:setup": "DATABASE_URL=\"postgresql://guardapi:guardapi@localhost:5432/guardapi_benchmark?schema=public\" prisma db push",
+    "benchmark": "tsx benchmark/runner.ts",
+    "benchmark:mock": "tsx benchmark/mockServer.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

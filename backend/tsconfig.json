@@ -10,6 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true
   },
-  "include": ["src", "tests", "prisma", "prisma.config.ts", "vitest.config.mts"],
+  "include": ["src", "tests", "benchmark", "prisma", "prisma.config.ts", "vitest.config.mts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -15,7 +15,8 @@ import path from 'node:path'
 import { performance } from 'node:perf_hooks'
 import { parseArgs } from 'node:util'
 import prisma from '../src/utils/prisma'
-import { pollDueMonitors } from '../src/jobs/scheduler'
+import { pollDueMonitors, resolvePollConcurrency } from '../src/jobs/scheduler'
+import { pollDueMonitorsUnbounded } from './unboundedScheduler'
 import { benchmarkDatabaseName } from './env'
 import {
   expectedCounts,
@@ -39,7 +40,30 @@ interface MockSummary {
   peakInFlight: number
 }
 
+type SchedulerImpl = 'bounded' | 'unbounded'
+
+interface SchedulerConfig {
+  impl: SchedulerImpl
+  // null for the unbounded implementation, which has no limit.
+  concurrency: number | null
+}
+
+interface CycleInfo {
+  skipped: boolean
+  monitorsDue: number
+  checksCompleted: number
+  failedPolls: number
+  maxInFlight: number
+}
+
+interface MemoryPeaks {
+  startRssMb: number
+  peakRssMb: number
+  peakHeapUsedMb: number
+}
+
 interface RunResult {
+  scheduler: SchedulerConfig
   monitorCount: number
   cycles: number
   totalChecks: number
@@ -61,6 +85,8 @@ interface RunResult {
     }
   }
   incidents: { total: number; outage: number; schemaChange: number; duplicates: number }
+  polls: { monitorsDue: number; completed: number; failed: number; maxInFlight: number }
+  memory: MemoryPeaks
   mock: { requestsReceived: number; peakInFlight: number }
   validation: { passed: boolean; problems: string[] }
 }
@@ -123,8 +149,11 @@ async function count(query: Promise<CountRow[]>): Promise<number> {
 }
 
 async function collectMetrics(
+  scheduler: SchedulerConfig,
   monitorCount: number,
   cycleDurationsMs: number[],
+  cycleInfos: CycleInfo[],
+  memory: MemoryPeaks,
   mock: MockSummary,
 ): Promise<RunResult> {
   const totalChecks = await count(prisma.$queryRaw<CountRow[]>`SELECT count(*) FROM monitor_checks`)
@@ -180,6 +209,19 @@ async function collectMetrics(
   if (mock.requestsReceived !== totalChecks) {
     problems.push(`mock target served ${mock.requestsReceived} requests for ${totalChecks} checks`)
   }
+  const polls = {
+    monitorsDue: cycleInfos.reduce((sum, c) => sum + c.monitorsDue, 0),
+    completed: cycleInfos.reduce((sum, c) => sum + c.checksCompleted, 0),
+    failed: cycleInfos.reduce((sum, c) => sum + c.failedPolls, 0),
+    maxInFlight: Math.max(...cycleInfos.map((c) => c.maxInFlight)),
+  }
+  if (polls.failed > 0) problems.push(`${polls.failed} polls threw before persisting a check`)
+  if (cycleInfos.some((c) => c.skipped)) problems.push('a scheduler cycle was skipped')
+  if (scheduler.concurrency !== null && polls.maxInFlight > scheduler.concurrency) {
+    problems.push(
+      `max in-flight ${polls.maxInFlight} exceeded concurrency ${scheduler.concurrency}`,
+    )
+  }
   if (outage !== expected.error) {
     problems.push(`expected ${expected.error} outage incidents, found ${outage}`)
   }
@@ -188,6 +230,7 @@ async function collectMetrics(
   }
 
   return {
+    scheduler,
     monitorCount,
     cycles,
     totalChecks,
@@ -217,12 +260,49 @@ async function collectMetrics(
       schemaChange,
       duplicates: Number(dupRow.duplicates),
     },
+    polls,
+    memory,
     mock: { requestsReceived: mock.requestsReceived, peakInFlight: mock.peakInFlight },
     validation: { passed: problems.length === 0, problems },
   }
 }
 
+const MB = 1024 * 1024
+
+// Samples this process's memory while the timed cycles run. It is a polling
+// sampler (every 25 ms), so it can miss a very short spike; it is not a profiler.
+function startMemorySampler(): () => MemoryPeaks {
+  const start = process.memoryUsage()
+  let peakRss = start.rss
+  let peakHeapUsed = start.heapUsed
+
+  const sample = () => {
+    const usage = process.memoryUsage()
+    peakRss = Math.max(peakRss, usage.rss)
+    peakHeapUsed = Math.max(peakHeapUsed, usage.heapUsed)
+  }
+  const timer = setInterval(sample, 25)
+
+  return () => {
+    clearInterval(timer)
+    sample()
+    return {
+      startRssMb: round(start.rss / MB, 1),
+      peakRssMb: round(peakRss / MB, 1),
+      peakHeapUsedMb: round(peakHeapUsed / MB, 1),
+    }
+  }
+}
+
+function pollCycleFor(scheduler: SchedulerConfig): () => Promise<CycleInfo> {
+  if (scheduler.impl === 'unbounded') {
+    return async () => ({ skipped: false, ...(await pollDueMonitorsUnbounded()) })
+  }
+  return async () => pollDueMonitors({ concurrency: scheduler.concurrency ?? undefined })
+}
+
 async function runConfiguration(
+  scheduler: SchedulerConfig,
   monitorCount: number,
   cycles: number,
   mockBaseUrl: string,
@@ -231,31 +311,40 @@ async function runConfiguration(
   await seedMonitors(prisma, monitorCount, mockBaseUrl)
   await mockRequest(mockBaseUrl, '/__reset')
 
+  const pollCycle = pollCycleFor(scheduler)
   const cycleDurationsMs: number[] = []
+  const cycleInfos: CycleInfo[] = []
+  const stopSampling = startMemorySampler()
   for (let cycle = 1; cycle <= cycles; cycle++) {
     // Setup between cycles is deliberately outside the timed region.
     if (cycle > 1) await makeAllMonitorsDue(prisma)
     if (cycle === 2) await flipSchemaMonitorsToV2(prisma)
 
     const startedAt = performance.now()
-    await pollDueMonitors()
+    cycleInfos.push(await pollCycle())
     cycleDurationsMs.push(performance.now() - startedAt)
   }
+  const memory = stopSampling()
 
   const mockStats = await mockRequest<MockStats>(mockBaseUrl, '/__stats')
-  return collectMetrics(monitorCount, cycleDurationsMs, {
+  return collectMetrics(scheduler, monitorCount, cycleDurationsMs, cycleInfos, memory, {
     requestsReceived: mockStats.requests,
     peakInFlight: mockStats.peakInFlight,
   })
 }
 
+function describeScheduler(scheduler: SchedulerConfig): string {
+  return scheduler.impl === 'unbounded' ? 'unbounded' : `bounded(${scheduler.concurrency})`
+}
+
 function printSummary(results: RunResult[]): void {
   console.log(
-    '\nmonitors  checks  failed  checks/s  cycle(ms)  p50   p95   p99   dupIncidents  valid',
+    '\nscheduler       monitors  checks  failed  checks/s  cycle(ms)  p50   p95   p99   maxInFlight  rssMB  dupInc  valid',
   )
   for (const r of results) {
     console.log(
       [
+        describeScheduler(r.scheduler).padEnd(15),
         String(r.monitorCount).padEnd(9),
         String(r.totalChecks).padEnd(7),
         String(r.failedChecks).padEnd(7),
@@ -264,7 +353,9 @@ function printSummary(results: RunResult[]): void {
         String(r.latencyMs.p50).padEnd(5),
         String(r.latencyMs.p95).padEnd(5),
         String(r.latencyMs.p99).padEnd(5),
-        String(r.incidents.duplicates).padEnd(13),
+        String(r.polls.maxInFlight).padEnd(12),
+        String(r.memory.peakRssMb).padEnd(6),
+        String(r.incidents.duplicates).padEnd(7),
         r.validation.passed ? 'yes' : 'NO',
       ].join(' '),
     )
@@ -280,6 +371,8 @@ async function main(): Promise<void> {
       label: { type: 'string' },
       out: { type: 'string' },
       note: { type: 'string' },
+      scheduler: { type: 'string' },
+      concurrency: { type: 'string' },
     },
   })
 
@@ -294,21 +387,39 @@ async function main(): Promise<void> {
     throw new Error('--cycles must be an integer >= 2 (cycle 2 is when schema changes appear)')
   }
 
+  const impl = (values.scheduler ?? 'bounded') as SchedulerImpl
+  if (impl !== 'bounded' && impl !== 'unbounded') {
+    throw new Error('--scheduler must be "bounded" or "unbounded"')
+  }
+  if (impl === 'unbounded' && values.concurrency !== undefined) {
+    throw new Error('--concurrency does not apply to --scheduler unbounded')
+  }
+  // Explicit --concurrency wins; otherwise resolve POLL_CONCURRENCY / the
+  // default exactly as the production scheduler does.
+  const concurrency =
+    impl === 'unbounded'
+      ? null
+      : resolvePollConcurrency(values.concurrency ?? process.env.POLL_CONCURRENCY)
+  const scheduler: SchedulerConfig = { impl, concurrency }
+
   const label = values.label ?? 'latest'
   const outFile = path.resolve(values.out ?? path.join(__dirname, 'results', `${label}.json`))
 
   const { child: mockProcess, baseUrl } = await startMockServer()
   try {
-    console.log(`[benchmark] label=${label} db=${benchmarkDatabaseName} mock=${baseUrl}`)
+    console.log(
+      `[benchmark] label=${label} scheduler=${describeScheduler(scheduler)} ` +
+        `db=${benchmarkDatabaseName} mock=${baseUrl}`,
+    )
 
     // Warm-up: open the DB pool and JIT the hot paths, results discarded.
-    await runConfiguration(WARMUP_MONITORS, 2, baseUrl)
+    await runConfiguration(scheduler, WARMUP_MONITORS, 2, baseUrl)
 
     const startedAt = new Date().toISOString()
     const runs: RunResult[] = []
     for (const monitorCount of monitorCounts) {
       console.log(`[benchmark] ${monitorCount} monitors x ${cycles} cycles ...`)
-      runs.push(await runConfiguration(monitorCount, cycles, baseUrl))
+      runs.push(await runConfiguration(scheduler, monitorCount, cycles, baseUrl))
     }
 
     const mockConfig = {
@@ -322,7 +433,7 @@ async function main(): Promise<void> {
         startedAt,
         finishedAt: new Date().toISOString(),
         git: gitInfo(),
-        pollConcurrency: process.env.POLL_CONCURRENCY ?? null,
+        scheduler,
         cyclesPerConfiguration: cycles,
         mock: mockConfig,
         monitorMix: { healthy: '70%', slow: '15%', error: '5%', schema: '10%' },

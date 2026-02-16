@@ -1,0 +1,3435 @@
+{
+  "meta": {
+    "note": "Commit 2 sweep: sequential vs bounded(10/25/50/100) vs original unbounded scheduler",
+    "startedAt": "2026-09-21T23:54:51.102Z",
+    "finishedAt": "2026-09-22T00:38:54.087Z",
+    "repeatsPerVariant": 3,
+    "sequentialRepeats": 1,
+    "git": {
+      "commit": "0b5ee536e11efa135b56cfa208680b5aaf22a139",
+      "dirty": true
+    },
+    "mock": {
+      "healthyDelayMs": 20,
+      "slowDelayMs": 500
+    },
+    "monitorMix": {
+      "healthy": "70%",
+      "slow": "15%",
+      "error": "5%",
+      "schema": "10%"
+    },
+    "cyclesPerConfiguration": 3,
+    "machine": {
+      "node": "v24.20.0",
+      "platform": "darwin arm64",
+      "cpu": "Apple M3",
+      "logicalCpus": 8,
+      "memoryGb": 8
+    }
+  },
+  "summary": [
+    {
+      "variant": "sequential",
+      "monitorCount": 1000,
+      "repeats": 1,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 9.36,
+        "meanCycleMs": 106866.1,
+        "p50LatencyMs": 23,
+        "p95LatencyMs": 504,
+        "p99LatencyMs": 512,
+        "maxInFlightPolls": 1,
+        "peakRssMb": 203.4,
+        "peakHeapUsedMb": 97.5
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 1000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 93.68,
+        "meanCycleMs": 10674.5,
+        "p50LatencyMs": 22,
+        "p95LatencyMs": 503,
+        "p99LatencyMs": 508,
+        "maxInFlightPolls": 10,
+        "peakRssMb": 199.9,
+        "peakHeapUsedMb": 159.4
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 2500,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 98.88,
+        "meanCycleMs": 25283.2,
+        "p50LatencyMs": 22,
+        "p95LatencyMs": 502,
+        "p99LatencyMs": 504,
+        "maxInFlightPolls": 10,
+        "peakRssMb": 229.6,
+        "peakHeapUsedMb": 176.7
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 5000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 82.8,
+        "meanCycleMs": 60383.4,
+        "p50LatencyMs": 22,
+        "p95LatencyMs": 504,
+        "p99LatencyMs": 530,
+        "maxInFlightPolls": 10,
+        "peakRssMb": 165.3,
+        "peakHeapUsedMb": 295.2
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 1000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 213.5,
+        "meanCycleMs": 4683.8,
+        "p50LatencyMs": 22,
+        "p95LatencyMs": 503,
+        "p99LatencyMs": 513,
+        "maxInFlightPolls": 25,
+        "peakRssMb": 200.7,
+        "peakHeapUsedMb": 124.8
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 2500,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 245.13,
+        "meanCycleMs": 10198.6,
+        "p50LatencyMs": 21,
+        "p95LatencyMs": 502,
+        "p99LatencyMs": 503,
+        "maxInFlightPolls": 25,
+        "peakRssMb": 235.1,
+        "peakHeapUsedMb": 176.7
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 5000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 177.03,
+        "meanCycleMs": 28244.5,
+        "p50LatencyMs": 23,
+        "p95LatencyMs": 507,
+        "p99LatencyMs": 556,
+        "maxInFlightPolls": 25,
+        "peakRssMb": 202.9,
+        "peakHeapUsedMb": 326.2
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 1000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 381.57,
+        "meanCycleMs": 2620.8,
+        "p50LatencyMs": 21,
+        "p95LatencyMs": 502,
+        "p99LatencyMs": 505,
+        "maxInFlightPolls": 50,
+        "peakRssMb": 210.5,
+        "peakHeapUsedMb": 127.8
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 2500,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 337.7,
+        "meanCycleMs": 7403,
+        "p50LatencyMs": 24,
+        "p95LatencyMs": 505,
+        "p99LatencyMs": 526,
+        "maxInFlightPolls": 50,
+        "peakRssMb": 216.2,
+        "peakHeapUsedMb": 183.3
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 5000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 313.38,
+        "meanCycleMs": 15955.2,
+        "p50LatencyMs": 24,
+        "p95LatencyMs": 508,
+        "p99LatencyMs": 539,
+        "maxInFlightPolls": 50,
+        "peakRssMb": 227.2,
+        "peakHeapUsedMb": 198.1
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 1000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 687.33,
+        "meanCycleMs": 1454.9,
+        "p50LatencyMs": 22,
+        "p95LatencyMs": 502,
+        "p99LatencyMs": 514,
+        "maxInFlightPolls": 100,
+        "peakRssMb": 251.5,
+        "peakHeapUsedMb": 157.3
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 2500,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 296.07,
+        "meanCycleMs": 8443.8,
+        "p50LatencyMs": 30,
+        "p95LatencyMs": 513,
+        "p99LatencyMs": 544,
+        "maxInFlightPolls": 100,
+        "peakRssMb": 221.3,
+        "peakHeapUsedMb": 191.7
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 5000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 391.13,
+        "meanCycleMs": 12783.5,
+        "p50LatencyMs": 26,
+        "p95LatencyMs": 507,
+        "p99LatencyMs": 534,
+        "maxInFlightPolls": 100,
+        "peakRssMb": 230.8,
+        "peakHeapUsedMb": 291.7
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 1000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 939.97,
+        "meanCycleMs": 1063.9,
+        "p50LatencyMs": 253,
+        "p95LatencyMs": 736,
+        "p99LatencyMs": 823,
+        "maxInFlightPolls": 1000,
+        "peakRssMb": 305.8,
+        "peakHeapUsedMb": 179.5
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 2500,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 260.5,
+        "meanCycleMs": 9596.9,
+        "p50LatencyMs": 1710,
+        "p95LatencyMs": 3545.1,
+        "p99LatencyMs": 3746,
+        "maxInFlightPolls": 2500,
+        "peakRssMb": 316.6,
+        "peakHeapUsedMb": 369.8
+      },
+      "maxDuplicateIncidents": 0
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 5000,
+      "repeats": 3,
+      "allValidationsPassed": true,
+      "median": {
+        "checksPerSec": 225.76,
+        "meanCycleMs": 22147.9,
+        "p50LatencyMs": 2242,
+        "p95LatencyMs": 4048.3,
+        "p99LatencyMs": 4933,
+        "maxInFlightPolls": 5000,
+        "peakRssMb": 342.2,
+        "peakHeapUsedMb": 799.8
+      },
+      "maxDuplicateIncidents": 0
+    }
+  ],
+  "results": [
+    {
+      "variant": "sequential",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 1
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 320.598,
+        "checksPerSec": 9.36,
+        "schedulerCycleMs": {
+          "perCycle": [
+            104167.2,
+            107081.1,
+            109350
+          ],
+          "mean": 106866.1,
+          "max": 109350
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 504,
+          "p99": 512
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 13.1,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 1
+        },
+        "memory": {
+          "startRssMb": 203.4,
+          "peakRssMb": 203.4,
+          "peakHeapUsedMb": 97.5
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 1
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 31.88,
+        "checksPerSec": 94.1,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10782.6,
+            10901.1,
+            10196.7
+          ],
+          "mean": 10626.8,
+          "max": 10901.1
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 509
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 131.74,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 184,
+          "peakRssMb": 185.9,
+          "peakHeapUsedMb": 128.2
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 1000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 32.023,
+        "checksPerSec": 93.68,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10758.1,
+            10677.7,
+            10587.6
+          ],
+          "mean": 10674.5,
+          "max": 10758.1
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 506
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 131.15,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 191,
+          "peakRssMb": 199.9,
+          "peakHeapUsedMb": 169
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 1000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 32.885,
+        "checksPerSec": 91.23,
+        "schedulerCycleMs": {
+          "perCycle": [
+            11768.9,
+            9990.8,
+            11125.2
+          ],
+          "mean": 10961.6,
+          "max": 11768.9
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 508
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 127.72,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 214.5,
+          "peakRssMb": 214.5,
+          "peakHeapUsedMb": 159.4
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 14.051,
+        "checksPerSec": 213.5,
+        "schedulerCycleMs": {
+          "perCycle": [
+            4854.3,
+            4740.3,
+            4456.8
+          ],
+          "mean": 4683.8,
+          "max": 4854.3
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 513
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 298.9,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 168,
+          "peakRssMb": 198.3,
+          "peakHeapUsedMb": 155.1
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 1000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 14.002,
+        "checksPerSec": 214.25,
+        "schedulerCycleMs": {
+          "perCycle": [
+            4483.2,
+            4437,
+            5081.8
+          ],
+          "mean": 4667.4,
+          "max": 5081.8
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 513
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 299.96,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 191.4,
+          "peakRssMb": 204.1,
+          "peakHeapUsedMb": 118.7
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 1000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 14.145,
+        "checksPerSec": 212.09,
+        "schedulerCycleMs": {
+          "perCycle": [
+            4880,
+            4396.8,
+            4868.2
+          ],
+          "mean": 4715,
+          "max": 4880
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 512
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 296.92,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 156.2,
+          "peakRssMb": 200.7,
+          "peakHeapUsedMb": 124.8
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 10.846,
+        "checksPerSec": 276.6,
+        "schedulerCycleMs": {
+          "perCycle": [
+            5584.7,
+            2983.7,
+            2277.5
+          ],
+          "mean": 3615.3,
+          "max": 5584.7
+        },
+        "latencyMs": {
+          "p50": 26,
+          "p95": 509,
+          "p99": 553
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 387.24,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 187.1,
+          "peakRssMb": 206,
+          "peakHeapUsedMb": 129.1
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 1000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 7.862,
+        "checksPerSec": 381.57,
+        "schedulerCycleMs": {
+          "perCycle": [
+            2387.7,
+            3094.3,
+            2380.3
+          ],
+          "mean": 2620.8,
+          "max": 3094.3
+        },
+        "latencyMs": {
+          "p50": 21,
+          "p95": 502,
+          "p99": 505
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 534.19,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 189,
+          "peakRssMb": 215.1,
+          "peakHeapUsedMb": 119.5
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 1000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 7.128,
+        "checksPerSec": 420.9,
+        "schedulerCycleMs": {
+          "perCycle": [
+            2583.9,
+            2307.6,
+            2236
+          ],
+          "mean": 2375.8,
+          "max": 2583.9
+        },
+        "latencyMs": {
+          "p50": 21,
+          "p95": 501,
+          "p99": 505
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 589.27,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 193.5,
+          "peakRssMb": 210.5,
+          "peakHeapUsedMb": 127.8
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 4.271,
+        "checksPerSec": 702.49,
+        "schedulerCycleMs": {
+          "perCycle": [
+            1538.2,
+            1403,
+            1329.3
+          ],
+          "mean": 1423.5,
+          "max": 1538.2
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 512
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 983.48,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 210.9,
+          "peakRssMb": 251.5,
+          "peakHeapUsedMb": 157.3
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 1000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 5.062,
+        "checksPerSec": 592.63,
+        "schedulerCycleMs": {
+          "perCycle": [
+            1431.6,
+            1300.1,
+            2330.6
+          ],
+          "mean": 1687.4,
+          "max": 2330.6
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 506,
+          "p99": 541
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 829.68,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 223.2,
+          "peakRssMb": 276.7,
+          "peakHeapUsedMb": 172.2
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 1000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 4.365,
+        "checksPerSec": 687.33,
+        "schedulerCycleMs": {
+          "perCycle": [
+            1520.3,
+            1473.9,
+            1370.5
+          ],
+          "mean": 1454.9,
+          "max": 1520.3
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 514
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 962.27,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 186.9,
+          "peakRssMb": 219.7,
+          "peakHeapUsedMb": 119.6
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 1000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 3.192,
+        "checksPerSec": 939.97,
+        "schedulerCycleMs": {
+          "perCycle": [
+            1453,
+            838.4,
+            900.2
+          ],
+          "mean": 1063.9,
+          "max": 1453
+        },
+        "latencyMs": {
+          "p50": 253,
+          "p95": 736,
+          "p99": 823
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 1315.95,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 1000
+        },
+        "memory": {
+          "startRssMb": 197,
+          "peakRssMb": 299.4,
+          "peakHeapUsedMb": 179.5
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 986
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 1000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 2.599,
+        "checksPerSec": 1154.34,
+        "schedulerCycleMs": {
+          "perCycle": [
+            961.5,
+            799.1,
+            838.3
+          ],
+          "mean": 866.3,
+          "max": 961.5
+        },
+        "latencyMs": {
+          "p50": 252.5,
+          "p95": 719,
+          "p99": 763
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 1616.08,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 1000
+        },
+        "memory": {
+          "startRssMb": 221.7,
+          "peakRssMb": 312.3,
+          "peakHeapUsedMb": 196.4
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 995
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 1000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 1000,
+        "cycles": 3,
+        "totalChecks": 3000,
+        "successfulChecks": 2850,
+        "failedChecks": 150,
+        "errorRate": 0.05,
+        "timedSeconds": 3.331,
+        "checksPerSec": 900.75,
+        "schedulerCycleMs": {
+          "perCycle": [
+            1067.9,
+            952,
+            1310.6
+          ],
+          "mean": 1110.2,
+          "max": 1310.6
+        },
+        "latencyMs": {
+          "p50": 354,
+          "p95": 802,
+          "p99": 847
+        },
+        "dbWrites": {
+          "total": 4200,
+          "perSec": 1261.05,
+          "breakdown": {
+            "checks": 3000,
+            "schemaSnapshots": 1050,
+            "incidentsOpened": 150,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 150,
+          "outage": 50,
+          "schemaChange": 100,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 3000,
+          "completed": 3000,
+          "failed": 0,
+          "maxInFlight": 1000
+        },
+        "memory": {
+          "startRssMb": 213,
+          "peakRssMb": 305.8,
+          "peakHeapUsedMb": 171.5
+        },
+        "mock": {
+          "requestsReceived": 3000,
+          "peakInFlight": 995
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 2500,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 75.85,
+        "checksPerSec": 98.88,
+        "schedulerCycleMs": {
+          "perCycle": [
+            25286.9,
+            25413.4,
+            25149.3
+          ],
+          "mean": 25283.2,
+          "max": 25413.4
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 503
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 138.43,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 227.7,
+          "peakRssMb": 229.6,
+          "peakHeapUsedMb": 176.7
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 2500,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 75.592,
+        "checksPerSec": 99.22,
+        "schedulerCycleMs": {
+          "perCycle": [
+            25858.8,
+            24891.2,
+            24842.3
+          ],
+          "mean": 25197.4,
+          "max": 25858.8
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 504
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 138.9,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 212.9,
+          "peakRssMb": 223.9,
+          "peakHeapUsedMb": 177.8
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 2500,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 108.304,
+        "checksPerSec": 69.25,
+        "schedulerCycleMs": {
+          "perCycle": [
+            25565.4,
+            57272.6,
+            25466.1
+          ],
+          "mean": 36101.4,
+          "max": 57272.6
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 504,
+          "p99": 629
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 96.95,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 230.5,
+          "peakRssMb": 230.5,
+          "peakHeapUsedMb": 140.4
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 2500,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 30.596,
+        "checksPerSec": 245.13,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10443.5,
+            10289.2,
+            9863.2
+          ],
+          "mean": 10198.6,
+          "max": 10443.5
+        },
+        "latencyMs": {
+          "p50": 21,
+          "p95": 502,
+          "p99": 503
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 343.18,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 222.6,
+          "peakRssMb": 235.1,
+          "peakHeapUsedMb": 176.7
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 2500,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 30.268,
+        "checksPerSec": 247.78,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10164,
+            10156.9,
+            9947.5
+          ],
+          "mean": 10089.5,
+          "max": 10164
+        },
+        "latencyMs": {
+          "p50": 21,
+          "p95": 502,
+          "p99": 503
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 346.9,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 181.1,
+          "peakRssMb": 204.6,
+          "peakHeapUsedMb": 167
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 2500,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 33.285,
+        "checksPerSec": 225.33,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10334.1,
+            11999.5,
+            10951.5
+          ],
+          "mean": 11095,
+          "max": 11999.5
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 502,
+          "p99": 515
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 315.46,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 222.4,
+          "peakRssMb": 268.6,
+          "peakHeapUsedMb": 181
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 2500,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 22.209,
+        "checksPerSec": 337.7,
+        "schedulerCycleMs": {
+          "perCycle": [
+            8616.2,
+            6284.9,
+            7307.9
+          ],
+          "mean": 7403,
+          "max": 8616.2
+        },
+        "latencyMs": {
+          "p50": 24,
+          "p95": 505,
+          "p99": 520
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 472.78,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 240.3,
+          "peakRssMb": 242.2,
+          "peakHeapUsedMb": 183.3
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 2500,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 23.546,
+        "checksPerSec": 318.53,
+        "schedulerCycleMs": {
+          "perCycle": [
+            9842.1,
+            6666.1,
+            7037.3
+          ],
+          "mean": 7848.5,
+          "max": 9842.1
+        },
+        "latencyMs": {
+          "p50": 25,
+          "p95": 507,
+          "p99": 527
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 445.94,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 216.2,
+          "peakRssMb": 216.2,
+          "peakHeapUsedMb": 195.7
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 2500,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 21.867,
+        "checksPerSec": 342.98,
+        "schedulerCycleMs": {
+          "perCycle": [
+            6470.3,
+            7611.5,
+            7785.6
+          ],
+          "mean": 7289.1,
+          "max": 7785.6
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 505,
+          "p99": 526
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 480.17,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 50.1,
+          "peakRssMb": 207.6,
+          "peakHeapUsedMb": 181
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 2500,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 25.332,
+        "checksPerSec": 296.07,
+        "schedulerCycleMs": {
+          "perCycle": [
+            8397.9,
+            7974.6,
+            8959
+          ],
+          "mean": 8443.8,
+          "max": 8959
+        },
+        "latencyMs": {
+          "p50": 30,
+          "p95": 522,
+          "p99": 609
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 414.5,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 221.2,
+          "peakRssMb": 221.3,
+          "peakHeapUsedMb": 191.7
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 2500,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 26.94,
+        "checksPerSec": 278.4,
+        "schedulerCycleMs": {
+          "perCycle": [
+            10852.4,
+            8800.3,
+            7286.9
+          ],
+          "mean": 8979.8,
+          "max": 10852.4
+        },
+        "latencyMs": {
+          "p50": 31,
+          "p95": 513,
+          "p99": 544
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 389.76,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 220.2,
+          "peakRssMb": 220.2,
+          "peakHeapUsedMb": 161.5
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 95
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 2500,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 16.378,
+        "checksPerSec": 457.93,
+        "schedulerCycleMs": {
+          "perCycle": [
+            8822.7,
+            4184.7,
+            3370.8
+          ],
+          "mean": 5459.4,
+          "max": 8822.7
+        },
+        "latencyMs": {
+          "p50": 25,
+          "p95": 508,
+          "p99": 540
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 641.1,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 103.5,
+          "peakRssMb": 227.6,
+          "peakHeapUsedMb": 198.4
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 2500,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 28.791,
+        "checksPerSec": 260.5,
+        "schedulerCycleMs": {
+          "perCycle": [
+            4659.8,
+            11338.9,
+            12792.1
+          ],
+          "mean": 9596.9,
+          "max": 12792.1
+        },
+        "latencyMs": {
+          "p50": 1710,
+          "p95": 3862,
+          "p99": 4222
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 364.7,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 2500
+        },
+        "memory": {
+          "startRssMb": 193.7,
+          "peakRssMb": 316.6,
+          "peakHeapUsedMb": 350.9
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 1563
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 2500,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 37.573,
+        "checksPerSec": 199.61,
+        "schedulerCycleMs": {
+          "perCycle": [
+            9597.7,
+            16610.2,
+            11365.4
+          ],
+          "mean": 12524.5,
+          "max": 16610.2
+        },
+        "latencyMs": {
+          "p50": 1767,
+          "p95": 3545.1,
+          "p99": 3746
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 279.45,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 2500
+        },
+        "memory": {
+          "startRssMb": 145.8,
+          "peakRssMb": 296.4,
+          "peakHeapUsedMb": 413
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 1508
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 2500,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 2500,
+        "cycles": 3,
+        "totalChecks": 7500,
+        "successfulChecks": 7125,
+        "failedChecks": 375,
+        "errorRate": 0.05,
+        "timedSeconds": 13.437,
+        "checksPerSec": 558.16,
+        "schedulerCycleMs": {
+          "perCycle": [
+            4958.1,
+            4572.9,
+            3905.9
+          ],
+          "mean": 4479,
+          "max": 4958.1
+        },
+        "latencyMs": {
+          "p50": 1098,
+          "p95": 1432,
+          "p99": 1535
+        },
+        "dbWrites": {
+          "total": 10500,
+          "perSec": 781.43,
+          "breakdown": {
+            "checks": 7500,
+            "schemaSnapshots": 2625,
+            "incidentsOpened": 375,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 375,
+          "outage": 125,
+          "schemaChange": 250,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 7500,
+          "completed": 7500,
+          "failed": 0,
+          "maxInFlight": 2500
+        },
+        "memory": {
+          "startRssMb": 194.4,
+          "peakRssMb": 335.2,
+          "peakHeapUsedMb": 369.8
+        },
+        "mock": {
+          "requestsReceived": 7500,
+          "peakInFlight": 1951
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 5000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 176.641,
+        "checksPerSec": 84.92,
+        "schedulerCycleMs": {
+          "perCycle": [
+            58754.9,
+            61627,
+            56258.6
+          ],
+          "mean": 58880.2,
+          "max": 61627
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 504,
+          "p99": 527
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 118.89,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 124.4,
+          "peakRssMb": 162,
+          "peakHeapUsedMb": 323.5
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 5000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 222.152,
+        "checksPerSec": 67.52,
+        "schedulerCycleMs": {
+          "perCycle": [
+            71470.3,
+            74608.8,
+            76073.3
+          ],
+          "mean": 74050.8,
+          "max": 76073.3
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 506,
+          "p99": 559
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 94.53,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 78.7,
+          "peakRssMb": 165.3,
+          "peakHeapUsedMb": 295.2
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-10",
+      "monitorCount": 5000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 10
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 181.15,
+        "checksPerSec": 82.8,
+        "schedulerCycleMs": {
+          "perCycle": [
+            54909.3,
+            59366.1,
+            66874.7
+          ],
+          "mean": 60383.4,
+          "max": 66874.7
+        },
+        "latencyMs": {
+          "p50": 22,
+          "p95": 503,
+          "p99": 530
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 115.93,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 10
+        },
+        "memory": {
+          "startRssMb": 89,
+          "peakRssMb": 210,
+          "peakHeapUsedMb": 186.4
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 10
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 5000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 136.103,
+        "checksPerSec": 110.21,
+        "schedulerCycleMs": {
+          "perCycle": [
+            74116,
+            35177.1,
+            26810.1
+          ],
+          "mean": 45367.8,
+          "max": 74116
+        },
+        "latencyMs": {
+          "p50": 24,
+          "p95": 510,
+          "p99": 624
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 154.29,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 226.8,
+          "peakRssMb": 229.3,
+          "peakHeapUsedMb": 197.1
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 5000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 84.734,
+        "checksPerSec": 177.03,
+        "schedulerCycleMs": {
+          "perCycle": [
+            27009.1,
+            32073.7,
+            25650.8
+          ],
+          "mean": 28244.5,
+          "max": 32073.7
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 507,
+          "p99": 556
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 247.84,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 129,
+          "peakRssMb": 202.9,
+          "peakHeapUsedMb": 326.2
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-25",
+      "monitorCount": 5000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 25
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 78.509,
+        "checksPerSec": 191.06,
+        "schedulerCycleMs": {
+          "perCycle": [
+            29028.5,
+            25373.2,
+            24107.3
+          ],
+          "mean": 26169.7,
+          "max": 29028.5
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 505,
+          "p99": 531
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 267.49,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 25
+        },
+        "memory": {
+          "startRssMb": 105.9,
+          "peakRssMb": 192.6,
+          "peakHeapUsedMb": 327.7
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 25
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 5000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 39.879,
+        "checksPerSec": 376.14,
+        "schedulerCycleMs": {
+          "perCycle": [
+            13680.1,
+            13680.4,
+            12518.1
+          ],
+          "mean": 13292.9,
+          "max": 13680.4
+        },
+        "latencyMs": {
+          "p50": 23,
+          "p95": 504,
+          "p99": 520
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 526.6,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 205.6,
+          "peakRssMb": 231.2,
+          "peakHeapUsedMb": 286.8
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 5000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 58.788,
+        "checksPerSec": 255.16,
+        "schedulerCycleMs": {
+          "perCycle": [
+            18395.9,
+            19363.9,
+            21027.9
+          ],
+          "mean": 19595.9,
+          "max": 21027.9
+        },
+        "latencyMs": {
+          "p50": 26,
+          "p95": 513,
+          "p99": 576
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 357.22,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 104.3,
+          "peakRssMb": 200.1,
+          "peakHeapUsedMb": 196
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-50",
+      "monitorCount": 5000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 50
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 47.866,
+        "checksPerSec": 313.38,
+        "schedulerCycleMs": {
+          "perCycle": [
+            17728.5,
+            14289.8,
+            15847.5
+          ],
+          "mean": 15955.2,
+          "max": 17728.5
+        },
+        "latencyMs": {
+          "p50": 24,
+          "p95": 508,
+          "p99": 539
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 438.73,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 50
+        },
+        "memory": {
+          "startRssMb": 172.5,
+          "peakRssMb": 227.2,
+          "peakHeapUsedMb": 198.1
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 50
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 5000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 37.876,
+        "checksPerSec": 396.03,
+        "schedulerCycleMs": {
+          "perCycle": [
+            18531,
+            9371.5,
+            9973.6
+          ],
+          "mean": 12625.4,
+          "max": 18531
+        },
+        "latencyMs": {
+          "p50": 25,
+          "p95": 507,
+          "p99": 533
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 554.44,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 50,
+          "peakRssMb": 237.1,
+          "peakHeapUsedMb": 291.7
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 5000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 44.924,
+        "checksPerSec": 333.9,
+        "schedulerCycleMs": {
+          "perCycle": [
+            19271.1,
+            13970.7,
+            11681.8
+          ],
+          "mean": 14974.5,
+          "max": 19271.1
+        },
+        "latencyMs": {
+          "p50": 27,
+          "p95": 511,
+          "p99": 561
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 467.46,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 66,
+          "peakRssMb": 207.8,
+          "peakHeapUsedMb": 207.1
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "bounded-100",
+      "monitorCount": 5000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "bounded",
+          "concurrency": 100
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 38.351,
+        "checksPerSec": 391.13,
+        "schedulerCycleMs": {
+          "perCycle": [
+            18772.6,
+            9561.4,
+            10016.6
+          ],
+          "mean": 12783.5,
+          "max": 18772.6
+        },
+        "latencyMs": {
+          "p50": 26,
+          "p95": 507,
+          "p99": 534
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 547.58,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 100
+        },
+        "memory": {
+          "startRssMb": 139.3,
+          "peakRssMb": 230.8,
+          "peakHeapUsedMb": 328.5
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 100
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 5000,
+      "repeat": 1,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 47.496,
+        "checksPerSec": 315.81,
+        "schedulerCycleMs": {
+          "perCycle": [
+            17242.7,
+            17124.1,
+            13129.5
+          ],
+          "mean": 15832.1,
+          "max": 17242.7
+        },
+        "latencyMs": {
+          "p50": 2242,
+          "p95": 3414,
+          "p99": 4201
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 442.14,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 5000
+        },
+        "memory": {
+          "startRssMb": 217.3,
+          "peakRssMb": 418.2,
+          "peakHeapUsedMb": 805.3
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 3403
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 5000,
+      "repeat": 2,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 66.444,
+        "checksPerSec": 225.76,
+        "schedulerCycleMs": {
+          "perCycle": [
+            25012.3,
+            19647.9,
+            21783.5
+          ],
+          "mean": 22147.9,
+          "max": 25012.3
+        },
+        "latencyMs": {
+          "p50": 3954,
+          "p95": 11389.9,
+          "p99": 12573
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 316.06,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 5000
+        },
+        "memory": {
+          "startRssMb": 152.2,
+          "peakRssMb": 339.3,
+          "peakHeapUsedMb": 799
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 4921
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    },
+    {
+      "variant": "unbounded",
+      "monitorCount": 5000,
+      "repeat": 3,
+      "run": {
+        "scheduler": {
+          "impl": "unbounded",
+          "concurrency": null
+        },
+        "monitorCount": 5000,
+        "cycles": 3,
+        "totalChecks": 15000,
+        "successfulChecks": 14250,
+        "failedChecks": 750,
+        "errorRate": 0.05,
+        "timedSeconds": 126.666,
+        "checksPerSec": 118.42,
+        "schedulerCycleMs": {
+          "perCycle": [
+            13439.5,
+            13018.8,
+            100208
+          ],
+          "mean": 42222.1,
+          "max": 100208
+        },
+        "latencyMs": {
+          "p50": 2197,
+          "p95": 4048.3,
+          "p99": 4933
+        },
+        "dbWrites": {
+          "total": 21000,
+          "perSec": 165.79,
+          "breakdown": {
+            "checks": 15000,
+            "schemaSnapshots": 5250,
+            "incidentsOpened": 750,
+            "incidentsResolved": 0
+          }
+        },
+        "incidents": {
+          "total": 750,
+          "outage": 250,
+          "schemaChange": 500,
+          "duplicates": 0
+        },
+        "polls": {
+          "monitorsDue": 15000,
+          "completed": 15000,
+          "failed": 0,
+          "maxInFlight": 5000
+        },
+        "memory": {
+          "startRssMb": 238.8,
+          "peakRssMb": 342.2,
+          "peakHeapUsedMb": 799.8
+        },
+        "mock": {
+          "requestsReceived": 15000,
+          "peakInFlight": 3888
+        },
+        "validation": {
+          "passed": true,
+          "problems": []
+        }
+      }
+    }
+  ]
+}

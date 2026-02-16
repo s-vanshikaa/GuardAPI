@@ -11,7 +11,8 @@ For each monitor count (default **25, 100, 500, 1000**) the runner:
 1. wipes the dedicated benchmark database and seeds that many active monitors
    (`pollIntervalMinutes = 1`) pointing at a local mock HTTP target;
 2. calls the real production `pollDueMonitors()` **3 times** ("cycles"),
-   timing each call;
+   timing each call (or, with `--scheduler unbounded`, the benchmark-only copy of
+   the original scheduler — see below);
 3. reads the results back out of PostgreSQL and writes one JSON file.
 
 | Cycle | Setup before it (not timed)                                                                                         | What it exercises                                   |
@@ -95,6 +96,29 @@ Environment variables:
 | `BENCHMARK_DATABASE_URL` | `postgresql://guardapi:guardapi@localhost:5432/guardapi_benchmark?schema=public` | Target DB. **All rows are deleted.** The database name must contain `benchmark` or the runner refuses to start. |
 | `MOCK_HEALTHY_DELAY_MS`  | `20`                                                                             | Latency of `/healthy`, `/error`, `/schema-*`                                                                    |
 | `MOCK_SLOW_DELAY_MS`     | `500`                                                                            | Latency of `/slow`                                                                                              |
+
+### Scheduler variants
+
+| Flag                              | Scheduler under test                                                                                                                                                                         |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(default)_                       | production bounded pool; concurrency from `POLL_CONCURRENCY` (default 50)                                                                                                                    |
+| `--concurrency 1`                 | production pool with one worker — sequential polling                                                                                                                                         |
+| `--concurrency 10` / `25` / `100` | production pool at that limit                                                                                                                                                                |
+| `--scheduler unbounded`           | `benchmark/unboundedScheduler.ts`: a verbatim copy of the pre-bounded scheduler (`Promise.allSettled` over every due monitor) plus in-flight counting. Benchmark-only; the app never uses it |
+
+### Comparing variants: the sweep
+
+```bash
+npm run benchmark:sweep                                   # 1000/2500/5000 monitors, 1 repeat
+npm run benchmark:sweep -- --monitors 1000 --repeats 3    # fewer sizes, 3 repeats each
+npm run benchmark:sweep -- --variants bounded-25,unbounded --out benchmark/results/mine.json
+```
+
+It runs sequential, bounded-10/25/50/100 and unbounded, **each in its own
+process** (so peak RSS is not inherited from an earlier run), and merges the
+output. Sequential is only run at ≤ 1,000 monitors and once, because at larger
+sizes a single run takes tens of minutes. The file contains every raw run plus
+a per-variant median summary; it does not rank the variants.
 
 Run the mock target on its own (for poking at with curl): `npm run benchmark:mock`.
 

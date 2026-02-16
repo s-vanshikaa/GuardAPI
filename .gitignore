@@ -15,4 +15,4 @@ coverage/
 frontend/node_modules/
 backend/node_modules/
 # Ad-hoc benchmark output (committed evidence lives in backend/benchmark/results)
-backend/benchmark/results/latest.json
+backend/benchmark/results/*latest.json

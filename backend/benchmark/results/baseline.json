@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "label": "baseline",
+    "note": "Pre-Commit-2 scheduler: unbounded Promise.allSettled over all due monitors",
+    "startedAt": "2026-09-21T23:45:08.630Z",
+    "finishedAt": "2026-09-21T23:45:16.560Z",
+    "git": {
+      "commit": "00465a675917b6a8f89aa6def3bed08bf39ced36",
+      "dirty": true
+    },
+    "pollConcurrency": null,
+    "cyclesPerConfiguration": 3,
+    "mock": {
+      "healthyDelayMs": 20,
+      "slowDelayMs": 500
+    },
+    "monitorMix": {
+      "healthy": "70%",
+      "slow": "15%",
+      "error": "5%",
+      "schema": "10%"
+    },
+    "machine": {
+      "node": "v24.20.0",
+      "platform": "darwin arm64",
+      "cpu": "Apple M3",
+      "logicalCpus": 8,
+      "memoryGb": 8
+    }
+  },
+  "runs": [
+    {
+      "monitorCount": 25,
+      "cycles": 3,
+      "totalChecks": 75,
+      "successfulChecks": 72,
+      "failedChecks": 3,
+      "errorRate": 0.04,
+      "timedSeconds": 1.574,
+      "checksPerSec": 47.66,
+      "schedulerCycleMs": {
+        "perCycle": [
+          521.8,
+          529.2,
+          522.7
+        ],
+        "mean": 524.6,
+        "max": 529.2
+      },
+      "latencyMs": {
+        "p50": 28,
+        "p95": 507.3,
+        "p99": 510
+      },
+      "dbWrites": {
+        "total": 104,
+        "perSec": 66.08,
+        "breakdown": {
+          "checks": 75,
+          "schemaSnapshots": 26,
+          "incidentsOpened": 3,
+          "incidentsResolved": 0
+        }
+      },
+      "incidents": {
+        "total": 3,
+        "outage": 1,
+        "schemaChange": 2,
+        "duplicates": 0
+      },
+      "mock": {
+        "requestsReceived": 75,
+        "peakInFlight": 25
+      },
+      "validation": {
+        "passed": true,
+        "problems": []
+      }
+    },
+    {
+      "monitorCount": 100,
+      "cycles": 3,
+      "totalChecks": 300,
+      "successfulChecks": 285,
+      "failedChecks": 15,
+      "errorRate": 0.05,
+      "timedSeconds": 1.631,
+      "checksPerSec": 183.88,
+      "schedulerCycleMs": {
+        "perCycle": [
+          555,
+          546.9,
+          529.6
+        ],
+        "mean": 543.8,
+        "max": 555
+      },
+      "latencyMs": {
+        "p50": 39,
+        "p95": 518,
+        "p99": 525
+      },
+      "dbWrites": {
+        "total": 420,
+        "perSec": 257.44,
+        "breakdown": {
+          "checks": 300,
+          "schemaSnapshots": 105,
+          "incidentsOpened": 15,
+          "incidentsResolved": 0
+        }
+      },
+      "incidents": {
+        "total": 15,
+        "outage": 5,
+        "schemaChange": 10,
+        "duplicates": 0
+      },
+      "mock": {
+        "requestsReceived": 300,
+        "peakInFlight": 100
+      },
+      "validation": {
+        "passed": true,
+        "problems": []
+      }
+    },
+    {
+      "monitorCount": 500,
+      "cycles": 3,
+      "totalChecks": 1500,
+      "successfulChecks": 1425,
+      "failedChecks": 75,
+      "errorRate": 0.05,
+      "timedSeconds": 1.871,
+      "checksPerSec": 801.52,
+      "schedulerCycleMs": {
+        "perCycle": [
+          634.1,
+          584.7,
+          652.6
+        ],
+        "mean": 623.8,
+        "max": 652.6
+      },
+      "latencyMs": {
+        "p50": 66,
+        "p95": 547.1,
+        "p99": 569
+      },
+      "dbWrites": {
+        "total": 2100,
+        "perSec": 1122.12,
+        "breakdown": {
+          "checks": 1500,
+          "schemaSnapshots": 525,
+          "incidentsOpened": 75,
+          "incidentsResolved": 0
+        }
+      },
+      "incidents": {
+        "total": 75,
+        "outage": 25,
+        "schemaChange": 50,
+        "duplicates": 0
+      },
+      "mock": {
+        "requestsReceived": 1500,
+        "peakInFlight": 494
+      },
+      "validation": {
+        "passed": true,
+        "problems": []
+      }
+    },
+    {
+      "monitorCount": 1000,
+      "cycles": 3,
+      "totalChecks": 3000,
+      "successfulChecks": 2850,
+      "failedChecks": 150,
+      "errorRate": 0.05,
+      "timedSeconds": 2.162,
+      "checksPerSec": 1387.57,
+      "schedulerCycleMs": {
+        "perCycle": [
+          792.6,
+          683.7,
+          685.8
+        ],
+        "mean": 720.7,
+        "max": 792.6
+      },
+      "latencyMs": {
+        "p50": 140,
+        "p95": 598,
+        "p99": 631
+      },
+      "dbWrites": {
+        "total": 4200,
+        "perSec": 1942.6,
+        "breakdown": {
+          "checks": 3000,
+          "schemaSnapshots": 1050,
+          "incidentsOpened": 150,
+          "incidentsResolved": 0
+        }
+      },
+      "incidents": {
+        "total": 150,
+        "outage": 50,
+        "schemaChange": 100,
+        "duplicates": 0
+      },
+      "mock": {
+        "requestsReceived": 3000,
+        "peakInFlight": 786
+      },
+      "validation": {
+        "passed": true,
+        "problems": []
+      }
+    }
+  ]
+}

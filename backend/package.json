@@ -20,6 +20,7 @@
     "db:studio": "prisma studio",
     "benchmark:setup": "DATABASE_URL=\"postgresql://guardapi:guardapi@localhost:5432/guardapi_benchmark?schema=public\" prisma db push",
     "benchmark": "tsx benchmark/runner.ts",
+    "benchmark:sweep": "tsx benchmark/sweep.ts",
     "benchmark:mock": "tsx benchmark/mockServer.ts"
   },
   "dependencies": {

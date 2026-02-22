@@ -74,9 +74,13 @@ describe('DashboardPage', () => {
       latestHttpStatus: 200,
       latestLatencyMs: 141,
       lastCheckedAt: new Date().toISOString(),
-      averageLatencyMs: 150,
       uptimePercentage: 99.8,
+      averageLatencyMs: 150,
+      p50LatencyMs: 140,
+      p95LatencyMs: 210,
+      p99LatencyMs: 240,
       totalChecks: 100,
+      successfulChecks: 99,
       failedChecks: 1,
     })
     vi.mocked(listIncidents).mockResolvedValue([

@@ -43,9 +43,13 @@ const metrics = {
   latestHttpStatus: 200,
   latestLatencyMs: 141,
   lastCheckedAt: new Date().toISOString(),
-  averageLatencyMs: 150,
   uptimePercentage: 99.8,
+  averageLatencyMs: 150,
+  p50LatencyMs: 140,
+  p95LatencyMs: 210,
+  p99LatencyMs: 240,
   totalChecks: 2,
+  successfulChecks: 1,
   failedChecks: 1,
 }
 
@@ -135,6 +139,7 @@ describe('ApiDetailPage', () => {
     expect(await screen.findByText('Stripe API')).toBeInTheDocument()
     expect(screen.getByText('https://api.stripe.com')).toBeInTheDocument()
     expect(screen.getByText('99.8%')).toBeInTheDocument()
+    expect(screen.getByText('210ms')).toBeInTheDocument()
     expect(screen.getByText('API is unreachable or failing')).toBeInTheDocument()
     expect(screen.getByText('Field removed: profile.email (was string)')).toBeInTheDocument()
     expect(screen.getAllByText('500')).toHaveLength(1)

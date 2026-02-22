@@ -100,18 +100,22 @@ export function ApiDetailPage() {
 
       <div className="stat-grid">
         <StatCard
-          label="Uptime"
+          label="Uptime (24h)"
           value={metrics.uptimePercentage != null ? `${metrics.uptimePercentage}%` : '—'}
         />
         <StatCard
-          label="Avg Latency"
+          label="Avg Latency (24h)"
           value={metrics.averageLatencyMs != null ? `${metrics.averageLatencyMs}ms` : '—'}
+        />
+        <StatCard
+          label="p95 Latency (24h)"
+          value={metrics.p95LatencyMs != null ? `${metrics.p95LatencyMs}ms` : '—'}
         />
         <StatCard
           label="Latest"
           value={metrics.latestLatencyMs != null ? `${metrics.latestLatencyMs}ms` : '—'}
         />
-        <StatCard label="Total Checks" value={String(metrics.totalChecks)} />
+        <StatCard label="Checks (24h)" value={String(metrics.totalChecks)} />
       </div>
 
       <div className="section">

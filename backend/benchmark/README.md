@@ -133,3 +133,24 @@ Run the mock target on its own (for poking at with curl): `npm run benchmark:moc
 - Latency percentiles reflect the mock's fixed delays (20 ms / 500 ms) plus
   GuardAPI/event-loop overhead; the ~500 ms p95/p99 at small sizes is the `/slow` endpoint.
 - Run-to-run variation is real. Repeat a run a few times before drawing conclusions.
+
+## Committed results
+
+`benchmark/results/` holds the evidence behind the résumé/portfolio numbers,
+committed rather than regenerated on demand so they can't silently drift from
+what's written up:
+
+- `baseline.json` — the scheduler as it existed before the Commit 2 bounded
+  pool (commit `00465a6`): unbounded `Promise.allSettled` over every due monitor.
+- `optimized.json` — the current scheduler (bounded pool, default
+  `POLL_CONCURRENCY=50`), same monitor counts and cycle count as `baseline.json`.
+- `concurrency-sweep.json` — sequential, bounded (10/25/50/100), and unbounded,
+  each at 1,000/2,500/5,000 monitors, produced by `npm run benchmark:sweep`.
+- `RESULTS.md` — the write-up: a full baseline-vs-optimized comparison table,
+  the larger-scale scaling comparison, and every calculated figure (throughput
+  change, cycle-duration change, max tested monitor count, estimated checks/day),
+  each traced back to the file and row it came from. **Read it before quoting
+  any number from this benchmark elsewhere** — it states plainly where the
+  bounded scheduler is faster (vs. sequential polling, and vs. unbounded once
+  memory pressure kicks in at scale) and where it is not (vs. unbounded at the
+  smaller sizes in `baseline.json`/`optimized.json`).

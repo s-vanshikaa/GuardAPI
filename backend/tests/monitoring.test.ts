@@ -4,6 +4,7 @@ import request from 'supertest'
 import app from '../src/app'
 import prisma from '../src/utils/prisma'
 import { pollDueMonitors } from '../src/jobs/scheduler'
+import { captureSchemaSnapshot } from '../src/services/monitorService'
 import { createUser, createMonitor, startTestServer } from './helpers'
 
 beforeEach(async () => {
@@ -114,5 +115,100 @@ describe('pollDueMonitors', () => {
 
     const checks = await prisma.monitorCheck.findMany({ where: { apiId: monitor.id } })
     expect(checks).toHaveLength(0)
+  })
+})
+
+describe('schema snapshot capture', () => {
+  it('captures a schema snapshot from a real poll of a JSON endpoint', async () => {
+    const alice = await createUser('alice@example.com')
+    const started = startTestServer((_req, res) => {
+      res
+        .writeHead(200, { 'Content-Type': 'application/json' })
+        .end(JSON.stringify({ id: 1, name: 'Alex' }))
+    })
+    server = started.server
+    const monitor = await createMonitor(alice.token, { endpointUrl: started.url })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    const snapshots = await prisma.schemaSnapshot.findMany({ where: { apiId: monitor.id } })
+    expect(snapshots).toHaveLength(1)
+    expect(snapshots[0].schema).toEqual({ id: 'number', name: 'string' })
+  })
+
+  it('does not capture a snapshot when the response status is unexpected', async () => {
+    const alice = await createUser('alice@example.com')
+    const started = startTestServer((_req, res) => {
+      res
+        .writeHead(500, { 'Content-Type': 'application/json' })
+        .end(JSON.stringify({ error: 'server error' }))
+    })
+    server = started.server
+    const monitor = await createMonitor(alice.token, { endpointUrl: started.url })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    const snapshots = await prisma.schemaSnapshot.findMany({ where: { apiId: monitor.id } })
+    expect(snapshots).toHaveLength(0)
+  })
+
+  it("does not replace the known schema with an error response's shape", async () => {
+    const alice = await createUser('alice@example.com')
+    let respondWithError = false
+    const started = startTestServer((_req, res) => {
+      if (respondWithError) {
+        res
+          .writeHead(500, { 'Content-Type': 'application/json' })
+          .end(JSON.stringify({ error: 'server error' }))
+      } else {
+        res
+          .writeHead(200, { 'Content-Type': 'application/json' })
+          .end(JSON.stringify({ id: 1, name: 'Alex' }))
+      }
+    })
+    server = started.server
+    const monitor = await createMonitor(alice.token, { endpointUrl: started.url })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+    respondWithError = true
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    const snapshots = await prisma.schemaSnapshot.findMany({ where: { apiId: monitor.id } })
+    expect(snapshots).toHaveLength(1)
+    expect(snapshots[0].schema).toEqual({ id: 'number', name: 'string' })
+  })
+
+  it('does not duplicate a snapshot when the schema is unchanged', async () => {
+    const alice = await createUser('alice@example.com')
+    const monitor = await createMonitor(alice.token)
+
+    await captureSchemaSnapshot(monitor.id, { id: 1 })
+    await captureSchemaSnapshot(monitor.id, { id: 2 })
+
+    const snapshots = await prisma.schemaSnapshot.findMany({ where: { apiId: monitor.id } })
+    expect(snapshots).toHaveLength(1)
+  })
+
+  it('creates a new snapshot when the schema changes', async () => {
+    const alice = await createUser('alice@example.com')
+    const monitor = await createMonitor(alice.token)
+
+    await captureSchemaSnapshot(monitor.id, { id: 1 })
+    await captureSchemaSnapshot(monitor.id, { id: '1' })
+
+    const snapshots = await prisma.schemaSnapshot.findMany({
+      where: { apiId: monitor.id },
+      orderBy: { capturedAt: 'asc' },
+    })
+    expect(snapshots).toHaveLength(2)
+    expect(snapshots[0].schemaHash).not.toBe(snapshots[1].schemaHash)
   })
 })

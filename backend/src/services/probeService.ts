@@ -5,6 +5,7 @@ export interface ProbeResult {
   httpStatus: number | null
   latencyMs: number
   errorType: string | null
+  responseData: unknown
 }
 
 function classifyError(err: unknown): string {
@@ -35,6 +36,7 @@ export async function probeEndpoint(
       httpStatus: response.status,
       latencyMs: Date.now() - startedAt,
       errorType: response.status === expectedStatus ? null : 'UNEXPECTED_STATUS',
+      responseData: response.data,
     }
   } catch (err) {
     return {
@@ -42,6 +44,7 @@ export async function probeEndpoint(
       httpStatus: null,
       latencyMs: Date.now() - startedAt,
       errorType: classifyError(err),
+      responseData: null,
     }
   }
 }

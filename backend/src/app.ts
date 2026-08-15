@@ -2,6 +2,7 @@ import express from 'express'
 import type { NextFunction, Request, Response } from 'express'
 import authRoutes from './routes/auth'
 import apiMonitorRoutes from './routes/apiMonitors'
+import incidentRoutes from './routes/incidents'
 import { AppError } from './utils/errors'
 
 const app = express()
@@ -14,6 +15,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/auth', authRoutes)
 app.use('/apis', apiMonitorRoutes)
+app.use('/incidents', incidentRoutes)
 
 app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof AppError) {

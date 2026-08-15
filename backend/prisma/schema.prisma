@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  apiMonitors ApiMonitor[]
+
+  @@map("users")
+}
+
+model ApiMonitor {
+  id                  String   @id @default(uuid())
+  userId              String   @map("user_id")
+  name                String
+  endpointUrl         String   @map("endpoint_url")
+  description         String?
+  expectedStatus      Int      @default(200) @map("expected_status")
+  pollIntervalMinutes Int      @default(5) @map("poll_interval_minutes")
+  isActive            Boolean  @default(true) @map("is_active")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  monitorChecks   MonitorCheck[]
+  schemaSnapshots SchemaSnapshot[]
+  incidents       Incident[]
+
+  @@index([userId])
+  @@map("api_monitors")
+}
+
+model MonitorCheck {
+  id         String   @id @default(uuid())
+  apiId      String   @map("api_id")
+  checkedAt  DateTime @default(now()) @map("checked_at")
+  success    Boolean
+  httpStatus Int?     @map("http_status")
+  latencyMs  Int?     @map("latency_ms")
+  errorType  String?  @map("error_type")
+
+  apiMonitor ApiMonitor @relation(fields: [apiId], references: [id], onDelete: Cascade)
+
+  @@index([apiId, checkedAt])
+  @@map("monitor_checks")
+}
+
+model SchemaSnapshot {
+  id         String   @id @default(uuid())
+  apiId      String   @map("api_id")
+  capturedAt DateTime @default(now()) @map("captured_at")
+  schema     Json
+  schemaHash String   @map("schema_hash")
+
+  apiMonitor ApiMonitor @relation(fields: [apiId], references: [id], onDelete: Cascade)
+
+  @@index([apiId, capturedAt])
+  @@map("schema_snapshots")
+}
+
+model Incident {
+  id          String         @id @default(uuid())
+  apiId       String         @map("api_id")
+  type        IncidentType
+  severity    Severity
+  status      IncidentStatus @default(OPEN)
+  title       String
+  description String?
+  openedAt    DateTime       @default(now()) @map("opened_at")
+  resolvedAt  DateTime?      @map("resolved_at")
+
+  apiMonitor ApiMonitor @relation(fields: [apiId], references: [id], onDelete: Cascade)
+
+  @@index([apiId, status])
+  @@map("incidents")
+}
+
+enum IncidentType {
+  OUTAGE
+  SCHEMA_CHANGE
+}
+
+enum Severity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum IncidentStatus {
+  OPEN
+  ACKNOWLEDGED
+  RESOLVED
+}

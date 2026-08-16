@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import type { NextFunction, Request, Response } from 'express'
 import authRoutes from './routes/auth'
 import apiMonitorRoutes from './routes/apiMonitors'
@@ -7,6 +8,9 @@ import { AppError } from './utils/errors'
 
 const app = express()
 
+// Permits any localhost origin/port for local dev. Production CORS config
+// (a specific deployed frontend origin) is Ticket 20's job.
+app.use(cors({ origin: /^http:\/\/localhost:\d+$/ }))
 app.use(express.json())
 
 app.get('/health', (_req, res) => {

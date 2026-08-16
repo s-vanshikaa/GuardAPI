@@ -1,0 +1,77 @@
+.incident-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.incident-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 12px var(--space-4);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.incident-row:last-child {
+  border-bottom: none;
+}
+
+.incident-row--critical {
+  background: rgba(235, 87, 87, 0.06);
+}
+
+.incident-row--clickable {
+  cursor: pointer;
+}
+
+.incident-row--clickable:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.incident-row--critical.incident-row--clickable:hover {
+  background: rgba(235, 87, 87, 0.1);
+}
+
+.incident-row__severity {
+  width: 84px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.incident-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.incident-row__title-link {
+  font-size: 13px;
+  color: var(--color-mist);
+  text-decoration: none;
+}
+
+.incident-row__title-link:hover {
+  color: var(--color-paper);
+}
+
+.incident-row__meta {
+  font-size: 12px;
+  color: var(--color-fog);
+}
+
+.incident-row__time {
+  width: 72px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 12px;
+  color: var(--color-fog);
+}
+
+.incident-row__status {
+  width: 96px;
+  flex-shrink: 0;
+  text-align: right;
+}

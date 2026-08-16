@@ -29,6 +29,7 @@ export async function getMonitorMetrics(userId: string, apiId: string) {
     currentHealth: latest ? (latest.success ? 'healthy' : 'down') : 'unknown',
     latestHttpStatus: latest?.httpStatus ?? null,
     latestLatencyMs: latest?.latencyMs ?? null,
+    lastCheckedAt: latest?.checkedAt ?? null,
     averageLatencyMs,
     uptimePercentage,
     totalChecks,

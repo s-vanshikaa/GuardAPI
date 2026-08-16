@@ -1,0 +1,24 @@
+.incident-detail__meta {
+  font-size: 13px;
+  color: var(--color-fog);
+}
+
+.incident-detail__meta-link {
+  color: var(--color-mist);
+  text-decoration: none;
+}
+
+.incident-detail__meta-link:hover {
+  color: var(--color-paper);
+}
+
+.incident-detail__summary {
+  font-size: 14px;
+  color: var(--color-mist);
+  max-width: 640px;
+}
+
+.incident-detail__actions {
+  display: flex;
+  gap: var(--space-2);
+}

@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type http from 'node:http'
 import request from 'supertest'
 import app from '../src/app'
@@ -6,6 +6,12 @@ import prisma from '../src/utils/prisma'
 import { pollDueMonitors } from '../src/jobs/scheduler'
 import { captureSchemaSnapshot } from '../src/services/monitorService'
 import { createUser, createMonitor, startTestServer } from './helpers'
+
+// Failed-check scenarios below open an OUTAGE incident, which would otherwise
+// try to send a real email over the network — mock it out like incidents.test.ts.
+vi.mock('../src/services/emailService', () => ({
+  sendIncidentEmail: vi.fn().mockResolvedValue(undefined),
+}))
 
 beforeEach(async () => {
   await prisma.user.deleteMany()

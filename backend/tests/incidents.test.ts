@@ -1,12 +1,19 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type http from 'node:http'
 import request from 'supertest'
 import app from '../src/app'
 import prisma from '../src/utils/prisma'
 import { createUser, createMonitor, startTestServer } from './helpers'
 
+vi.mock('../src/services/emailService', () => ({
+  sendIncidentEmail: vi.fn().mockResolvedValue(undefined),
+}))
+import { sendIncidentEmail } from '../src/services/emailService'
+const sendIncidentEmailMock = vi.mocked(sendIncidentEmail)
+
 beforeEach(async () => {
   await prisma.user.deleteMany()
+  sendIncidentEmailMock.mockClear()
 })
 
 let server: http.Server | undefined
@@ -163,6 +170,90 @@ describe('incident creation from schema changes', () => {
 
     const incidents = await prisma.incident.findMany({ where: { apiId: monitor.id } })
     expect(incidents).toHaveLength(1)
+  })
+})
+
+describe('email notifications for CRITICAL incidents', () => {
+  it('sends exactly one email when an outage incident opens', async () => {
+    const alice = await createUser('alice@example.com')
+    const monitor = await createMonitor(alice.token, { endpointUrl: 'http://127.0.0.1:1' })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    expect(sendIncidentEmailMock).toHaveBeenCalledTimes(1)
+    expect(sendIncidentEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        apiMonitor: expect.objectContaining({ id: monitor.id }),
+        incident: expect.objectContaining({ type: 'OUTAGE', severity: 'CRITICAL' }),
+      }),
+    )
+  })
+
+  it('does not send a repeat email while the outage incident stays open', async () => {
+    const alice = await createUser('alice@example.com')
+    const monitor = await createMonitor(alice.token, { endpointUrl: 'http://127.0.0.1:1' })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    expect(sendIncidentEmailMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('sends an email for a CRITICAL schema change (field removed)', async () => {
+    const alice = await createUser('alice@example.com')
+    let removeEmail = false
+    const started = startTestServer((_req, res) => {
+      const body = removeEmail ? { id: 1 } : { id: 1, email: 'a@b.com' }
+      res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(body))
+    })
+    server = started.server
+    const monitor = await createMonitor(alice.token, { endpointUrl: started.url })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+    removeEmail = true
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    expect(sendIncidentEmailMock).toHaveBeenCalledTimes(1)
+    expect(sendIncidentEmailMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'alice@example.com',
+        incident: expect.objectContaining({ type: 'SCHEMA_CHANGE', severity: 'CRITICAL' }),
+      }),
+    )
+  })
+
+  it('does not send an email for a WARNING (type-changed) schema change', async () => {
+    const alice = await createUser('alice@example.com')
+    let stringId = false
+    const started = startTestServer((_req, res) => {
+      const body = stringId ? { id: '1' } : { id: 1 }
+      res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(body))
+    })
+    server = started.server
+    const monitor = await createMonitor(alice.token, { endpointUrl: started.url })
+
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+    stringId = true
+    await request(app)
+      .post(`/apis/${monitor.id}/poll`)
+      .set('Authorization', `Bearer ${alice.token}`)
+
+    const incidents = await prisma.incident.findMany({ where: { apiId: monitor.id } })
+    expect(incidents[0]).toMatchObject({ severity: 'WARNING' })
+    expect(sendIncidentEmailMock).not.toHaveBeenCalled()
   })
 })
 

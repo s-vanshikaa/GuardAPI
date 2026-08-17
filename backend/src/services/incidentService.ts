@@ -3,11 +3,31 @@ import prisma from '../utils/prisma'
 import { AppError } from '../utils/errors'
 import { classifySeverity } from './schemaService'
 import type { SchemaChange } from './schemaService'
+import { sendIncidentEmail } from './emailService'
 
 const OPEN_STATUSES: IncidentStatus[] = ['OPEN', 'ACKNOWLEDGED']
 
 function findOpenIncident(apiId: string, type: IncidentType) {
   return prisma.incident.findFirst({ where: { apiId, type, status: { in: OPEN_STATUSES } } })
+}
+
+// Fires once per newly-opened CRITICAL incident (outage, or a breaking schema
+// change). Notification failures are logged, not thrown — a broken mail
+// config must never stop an incident from being recorded.
+async function notifyIfCritical(incident: Incident): Promise<void> {
+  if (incident.severity !== 'CRITICAL') return
+
+  const apiMonitor = await prisma.apiMonitor.findUnique({
+    where: { id: incident.apiId },
+    include: { user: true },
+  })
+  if (!apiMonitor) return
+
+  try {
+    await sendIncidentEmail({ to: apiMonitor.user.email, apiMonitor, incident })
+  } catch (err) {
+    console.error('[incidentService] failed to send incident email:', err)
+  }
 }
 
 function describeFailure(check: MonitorCheck): string {
@@ -27,7 +47,7 @@ export async function handleOutageIncident(apiId: string, check: MonitorCheck): 
 
   if (!check.success) {
     if (existing) return
-    await prisma.incident.create({
+    const incident = await prisma.incident.create({
       data: {
         apiId,
         type: 'OUTAGE',
@@ -36,6 +56,7 @@ export async function handleOutageIncident(apiId: string, check: MonitorCheck): 
         description: describeFailure(check),
       },
     })
+    await notifyIfCritical(incident)
     return
   }
 
@@ -85,7 +106,7 @@ export async function handleSchemaChangeIncident(
   const existing = await findOpenIncident(apiId, 'SCHEMA_CHANGE')
   if (existing) return
 
-  await prisma.incident.create({
+  const incident = await prisma.incident.create({
     data: {
       apiId,
       type: 'SCHEMA_CHANGE',
@@ -94,6 +115,7 @@ export async function handleSchemaChangeIncident(
       description: summarizeChanges(changes).join('\n'),
     },
   })
+  await notifyIfCritical(incident)
 }
 
 async function getOwnedIncident(userId: string, id: string): Promise<Incident> {
